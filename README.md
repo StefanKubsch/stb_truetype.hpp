@@ -6,6 +6,10 @@ authored/modified in 2019 by Stefan Kubsch
 
 a stripped down version of stb_truetype.h
 
+Original version infos:
+stb_truetype.h - v1.21 - public domain
+authored from 2009-2016 by Sean Barrett / RAD Game Tools
+
 WHY AND WHAT?
 -------------
 
