@@ -11,7 +11,8 @@ WHY AND WHAT?
 
 Since I only use the "old" 3D API in my project, I removed all unrelated stuff and tried to "upgrade" the original code to C++.
 
-This lib is perfect if you just need following functions to generate a simple atlas-bitmap for further use with e.g.OpenGL:
+This lib is perfect if you just need following functions to generate a simple atlas-bitmap for further use with e.g. OpenGL:
+
   - stbtt_InitFont()
   - stbtt_GetCodepointBitmapBox()
   - stbtt_BakeFontBitmap()
