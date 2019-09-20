@@ -25,3 +25,5 @@ example/x64/Release/example.tlog/CL.command.1.tlog
 example/x64/Release/example.obj
 example/x64/Release/Fonts/Mansalva/OFL.txt
 example/x64/Release/Fonts/Ubuntu_Mono/UFL.txt
+example/x64/Release/example.Build.CppClean.log
+example/x64/Release/example.vcxproj.FileListAbsolute.txt
