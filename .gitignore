@@ -27,3 +27,4 @@ example/x64/Release/Fonts/Mansalva/OFL.txt
 example/x64/Release/Fonts/Ubuntu_Mono/UFL.txt
 example/x64/Release/example.Build.CppClean.log
 example/x64/Release/example.vcxproj.FileListAbsolute.txt
+example/.vs/example/v16/ipch/AutoPCH/1ba831b559433e5b/EXAMPLE.ipch
