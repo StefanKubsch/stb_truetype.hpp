@@ -29,3 +29,7 @@ example/x64/Release/example.Build.CppClean.log
 example/x64/Release/example.vcxproj.FileListAbsolute.txt
 example/.vs/example/v16/ipch/AutoPCH/1ba831b559433e5b/EXAMPLE.ipch
 example/lwmf_systemlog.log
+.vs/slnx.sqlite
+.vs/stb_truetype.hpp/v16/.suo
+.vs/stb_truetype.hpp/v16/Browse.VC.db
+.vs/VSWorkspaceState.json

@@ -23,7 +23,7 @@
 
 // Include stb_truetype.hpp
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "./stb_truetype/stb_truetype.hpp"
+#include "./src/stb_truetype.hpp"
 
 // "ScreenTexture" is the main render target in our demo!
 inline lwmf::TextureStruct ScreenTexture;
@@ -87,7 +87,7 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, std::int_fast32
 	std::vector<unsigned char> BakedFontGreyscale(static_cast<std::size_t>(Width) * static_cast<std::size_t>(Height));
 	std::vector<std::int_fast32_t> FontColor(static_cast<std::size_t>(Width) * static_cast<std::size_t>(Height));
 	std::vector<stbtt_bakedchar> CharData(NumberOfASCIIChars);
-	stbtt_BakeFontBitmap(FontBuffer, 0, static_cast<float>(FontSize), BakedFontGreyscale.data(), Width, Height, FirstASCIIChar, NumberOfASCIIChars, CharData.data());
+	stbtt_BakeFontBitmap(FontBuffer, 0, static_cast<float>(FontSize), BakedFontGreyscale, Width, Height, FirstASCIIChar, NumberOfASCIIChars, CharData);
 
 	// Since the glyphs were rendered in greyscale, they need to be colored...
 	const lwmf::ColorStruct TempColor{ lwmf::INTtoRGBA(Color) };
