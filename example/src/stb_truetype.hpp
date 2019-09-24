@@ -105,7 +105,6 @@
 //   See end of file for license information.
 //
 
-
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 ////
@@ -257,8 +256,8 @@ float stbtt_ScaleForPixelHeight(const stbtt_fontinfo& info, float height);
 // Height is measured as the distance from the highest ascender to the lowest
 // descender.
 
-void stbtt_GetGlyphHMetrics(const stbtt_fontinfo& info, std::int_fast32_t glyph_index, std::int_fast32_t* advanceWidth, std::int_fast32_t* leftSideBearing);
-std::int_fast32_t stbtt_GetGlyphBox(const stbtt_fontinfo& info, std::int_fast32_t glyph_index, std::int_fast32_t* x0, std::int_fast32_t* y0, std::int_fast32_t* x1, std::int_fast32_t* y1);
+void stbtt_GetGlyphHMetrics(const stbtt_fontinfo& info, std::int_fast32_t glyph_index, std::int_fast32_t& advanceWidth, std::int_fast32_t& leftSideBearing);
+std::int_fast32_t stbtt_GetGlyphBox(const stbtt_fontinfo& info, std::int_fast32_t glyph_index, std::int_fast32_t& x0, std::int_fast32_t& y0, std::int_fast32_t& x1, std::int_fast32_t& y1);
 // as above, but takes one or more glyph indices for greater efficiency
 
 //////////////////////////////////////////////////////////////////////////////
@@ -304,14 +303,14 @@ std::int_fast32_t stbtt_GetGlyphShape(const stbtt_fontinfo& info, std::int_fast3
 // BITMAP RENDERING
 //
 
-void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo& font, std::int_fast32_t codepoint, float scale_x, float scale_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1);
+void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo& font, std::int_fast32_t codepoint, float scale_x, float scale_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1);
 // get the bbox of the bitmap centered around the glyph origin; so the
 // bitmap width is ix1-ix0, height is iy1-iy0, and location to place
 // the bitmap top left is (leftSideBearing*scale,iy0).
 // (Note that the bitmap uses y-increases-down, but the shape uses
 // y-increases-up, so CodepointBitmapBox and CodepointBox are inverted.)
 
-void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fast32_t codepoint, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1);
+void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fast32_t codepoint, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1);
 // same as stbtt_GetCodepointBitmapBox, but you can specify a subpixel
 // shift for the character
 
@@ -320,7 +319,7 @@ void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fa
 void stbtt_MakeGlyphBitmap(const stbtt_fontinfo& info, unsigned char* output, std::int_fast32_t out_w, std::int_fast32_t out_h, std::int_fast32_t out_stride, float scale_x, float scale_y, std::int_fast32_t glyph);
 void stbtt_MakeGlyphBitmapSubpixel(const stbtt_fontinfo& info, unsigned char* output, std::int_fast32_t out_w, std::int_fast32_t out_h, std::int_fast32_t out_stride, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t glyph);
 void stbtt_GetGlyphBitmapBox(const stbtt_fontinfo& font, std::int_fast32_t glyph, float scale_x, float scale_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1);
-void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fast32_t glyph, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1);
+void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fast32_t glyph, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1);
 
 struct stbtt__bitmap
 {
@@ -952,9 +951,9 @@ inline static std::int_fast32_t stbtt__GetGlyfOffset(const stbtt_fontinfo& info,
 	return g1 == g2 ? -1 : g1; // if length is 0, return -1
 }
 
-static std::int_fast32_t stbtt__GetGlyphInfoT2(const stbtt_fontinfo& info, std::int_fast32_t glyph_index, std::int_fast32_t* x0, std::int_fast32_t* y0, std::int_fast32_t* x1, std::int_fast32_t* y1);
+static std::int_fast32_t stbtt__GetGlyphInfoT2(const stbtt_fontinfo& info, std::int_fast32_t glyph_index, std::int_fast32_t& x0, std::int_fast32_t& y0, std::int_fast32_t& x1, std::int_fast32_t& y1);
 
-inline std::int_fast32_t stbtt_GetGlyphBox(const stbtt_fontinfo& info, const std::int_fast32_t glyph_index, std::int_fast32_t* x0, std::int_fast32_t* y0, std::int_fast32_t* x1, std::int_fast32_t* y1)
+inline std::int_fast32_t stbtt_GetGlyphBox(const stbtt_fontinfo& info, const std::int_fast32_t glyph_index, std::int_fast32_t& x0, std::int_fast32_t& y0, std::int_fast32_t& x1, std::int_fast32_t& y1)
 {
 	if (info.cff.size != 0)
 	{
@@ -962,32 +961,17 @@ inline std::int_fast32_t stbtt_GetGlyphBox(const stbtt_fontinfo& info, const std
 	}
 	else
 	{
-		std::int_fast32_t g{ stbtt__GetGlyfOffset(info, glyph_index) };
+		const std::int_fast32_t g{ stbtt__GetGlyfOffset(info, glyph_index) };
 
 		if (g < 0)
 		{
 			return 0;
 		}
 
-		if (x0 != nullptr)
-		{
-			*x0 = ttSHORT(info.data + g + 2);
-		}
-
-		if (y0 != nullptr)
-		{
-			*y0 = ttSHORT(info.data + g + 4);
-		}
-
-		if (x1 != nullptr)
-		{
-			*x1 = ttSHORT(info.data + g + 6);
-		}
-
-		if (y1 != nullptr)
-		{
-			*y1 = ttSHORT(info.data + g + 8);
-		}
+		x0 = ttSHORT(info.data + g + 2);
+		y0 = ttSHORT(info.data + g + 4);
+		x1 = ttSHORT(info.data + g + 6);
+		y1 = ttSHORT(info.data + g + 8);
 	}
 
 	return 1;
@@ -1376,7 +1360,7 @@ inline static void stbtt__csctx_v(stbtt__csctx& c, const unsigned char type, con
 		c.pvertices[c.num_vertices].cy1 = static_cast<short>(cy1);
 	}
 
-	c.num_vertices++;
+	++c.num_vertices;
 }
 
 inline static void stbtt__csctx_close_shape(stbtt__csctx& ctx)
@@ -1881,14 +1865,6 @@ inline static std::int_fast32_t stbtt__run_charstring(const stbtt_fontinfo& info
 				clear_stack = 0;
 				break;
 			}
-
-			// This is some original code that is not reachable...
-			/*
-			if (clear_stack != 0)
-			{
-				sp = 0;
-			}
-			*/
 		}
 	}
 
@@ -1917,30 +1893,15 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeT2(const stbtt_fontinfo& inf
 	return 0;
 }
 
-inline static std::int_fast32_t stbtt__GetGlyphInfoT2(const stbtt_fontinfo& info, const std::int_fast32_t glyph_index, std::int_fast32_t* x0, std::int_fast32_t* y0, std::int_fast32_t* x1, std::int_fast32_t* y1)
+inline static std::int_fast32_t stbtt__GetGlyphInfoT2(const stbtt_fontinfo& info, const std::int_fast32_t glyph_index, std::int_fast32_t& x0, std::int_fast32_t& y0, std::int_fast32_t& x1, std::int_fast32_t& y1)
 {
 	stbtt__csctx c{ 1, 0, 0.0F, 0.0F, 0.0F, 0.0F, 0, 0, 0, 0, {}, 0 };
 	const std::int_fast32_t r{ stbtt__run_charstring(info, glyph_index, c) };
 
-	if (x0 != nullptr)
-	{
-		*x0 = r != 0 ? c.min_x : 0;
-	}
-
-	if (y0 != nullptr)
-	{
-		*y0 = r != 0 ? c.min_y : 0;
-	}
-
-	if (x1 != nullptr)
-	{
-		*x1 = r != 0 ? c.max_x : 0;
-	}
-
-	if (y1 != nullptr)
-	{
-		*y1 = r != 0 ? c.max_y : 0;
-	}
+	x0 = r != 0 ? c.min_x : 0;
+	y0 = r != 0 ? c.min_y : 0;
+	x1 = r != 0 ? c.max_x : 0;
+	y1 = r != 0 ? c.max_y : 0;
 
 	return r != 0 ? c.num_vertices : 0;
 }
@@ -1955,32 +1916,17 @@ inline std::int_fast32_t stbtt_GetGlyphShape(const stbtt_fontinfo& info, const s
 	return stbtt__GetGlyphShapeT2(info, glyph_index, pvertices);
 }
 
-inline void stbtt_GetGlyphHMetrics(const stbtt_fontinfo& info, const std::int_fast32_t glyph_index, std::int_fast32_t* advanceWidth, std::int_fast32_t* leftSideBearing)
+inline void stbtt_GetGlyphHMetrics(const stbtt_fontinfo& info, const std::int_fast32_t glyph_index, std::int_fast32_t& advanceWidth, std::int_fast32_t& leftSideBearing)
 {
-
 	if (const std::int_fast32_t numOfLongHorMetrics{ ttUSHORT(info.data + info.hhea + 34) }; glyph_index < numOfLongHorMetrics)
 	{
-		if (advanceWidth != nullptr)
-		{
-			*advanceWidth = ttSHORT(info.data + info.hmtx + 4 * glyph_index);
-		}
-
-		if (leftSideBearing != nullptr)
-		{
-			*leftSideBearing = ttSHORT(info.data + info.hmtx + 4 * glyph_index + 2);
-		}
+		advanceWidth = ttSHORT(info.data + info.hmtx + 4 * glyph_index);
+		leftSideBearing = ttSHORT(info.data + info.hmtx + 4 * glyph_index + 2);
 	}
 	else
 	{
-		if (advanceWidth != nullptr)
-		{
-			*advanceWidth = ttSHORT(info.data + info.hmtx + 4 * (numOfLongHorMetrics - 1));
-		}
-
-		if (leftSideBearing != nullptr)
-		{
-			*leftSideBearing = ttSHORT(info.data + info.hmtx + 4 * numOfLongHorMetrics + 2 * (glyph_index - numOfLongHorMetrics));
-		}
+		advanceWidth = ttSHORT(info.data + info.hmtx + 4 * (numOfLongHorMetrics - 1));
+		leftSideBearing = ttSHORT(info.data + info.hmtx + 4 * numOfLongHorMetrics + 2 * (glyph_index - numOfLongHorMetrics));
 	}
 }
 
@@ -1994,72 +1940,42 @@ inline float stbtt_ScaleForPixelHeight(const stbtt_fontinfo& info, const float h
 // antialiasing software rasterizer
 //
 
-inline void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo& font, const std::int_fast32_t glyph, const float scale_x, const float scale_y, const float shift_x, const float shift_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1)
+inline void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo& font, const std::int_fast32_t glyph, const float scale_x, const float scale_y, const float shift_x, const float shift_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1)
 {
 	std::int_fast32_t x0{};
 	std::int_fast32_t y0{};
 	std::int_fast32_t x1{};
 	std::int_fast32_t y1{};
 
-	if (stbtt_GetGlyphBox(font, glyph, &x0, &y0, &x1, &y1) == 0)
+	if (stbtt_GetGlyphBox(font, glyph, x0, y0, x1, y1) == 0)
 	{
 		// e.g. space character
-		if (ix0 != nullptr)
-		{
-			*ix0 = 0;
-		}
-
-		if (iy0 != nullptr)
-		{
-			*iy0 = 0;
-		}
-
-		if (ix1 != nullptr)
-		{
-			*ix1 = 0;
-		}
-
-		if (iy1 != nullptr)
-		{
-			*iy1 = 0;
-		}
+		ix0 = 0;
+		iy0 = 0;
+		ix1 = 0;
+		iy1 = 0;
 	}
 	else
 	{
 		// move to integral bboxes (treating pixels as little squares, what pixels get touched)?
-		if (ix0 != nullptr)
-		{
-			*ix0 = static_cast<std::int_fast32_t>(std::floorf(x0 * scale_x + shift_x));
-		}
-
-		if (iy0 != nullptr)
-		{
-			*iy0 = static_cast<std::int_fast32_t>(std::floorf(-y1 * scale_y + shift_y));
-		}
-
-		if (ix1 != nullptr)
-		{
-			*ix1 = static_cast<std::int_fast32_t>(std::ceilf(x1 * scale_x + shift_x));
-		}
-
-		if (iy1 != nullptr)
-		{
-			*iy1 = static_cast<std::int_fast32_t>(std::ceilf(-y0 * scale_y + shift_y));
-		}
+		ix0 = static_cast<std::int_fast32_t>(std::floorf(x0 * scale_x + shift_x));
+		iy0 = static_cast<std::int_fast32_t>(std::floorf(-y1 * scale_y + shift_y));
+		ix1 = static_cast<std::int_fast32_t>(std::ceilf(x1 * scale_x + shift_x));
+		iy1 = static_cast<std::int_fast32_t>(std::ceilf(-y0 * scale_y + shift_y));
 	}
 }
 
-inline void stbtt_GetGlyphBitmapBox(const stbtt_fontinfo& font, const std::int_fast32_t glyph, const float scale_x, const float scale_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1)
+inline void stbtt_GetGlyphBitmapBox(const stbtt_fontinfo& font, const std::int_fast32_t glyph, const float scale_x, const float scale_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1)
 {
    stbtt_GetGlyphBitmapBoxSubpixel(font, glyph, scale_x, scale_y, 0.0F, 0.0F, ix0, iy0, ix1, iy1);
 }
 
-inline void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo& font, const std::int_fast32_t codepoint, const float scale_x, const float scale_y, const float shift_x, const float shift_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1)
+inline void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo& font, const std::int_fast32_t codepoint, const float scale_x, const float scale_y, const float shift_x, const float shift_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1)
 {
    stbtt_GetGlyphBitmapBoxSubpixel(font, stbtt_FindGlyphIndex(font,codepoint), scale_x, scale_y, shift_x, shift_y, ix0, iy0, ix1, iy1);
 }
 
-inline void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo& font, const std::int_fast32_t codepoint, const float scale_x, const float scale_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1)
+inline void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo& font, const std::int_fast32_t codepoint, const float scale_x, const float scale_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1)
 {
    stbtt_GetCodepointBitmapBoxSubpixel(font, codepoint, scale_x, scale_y, 0.0F, 0.0F, ix0, iy0, ix1, iy1);
 }
@@ -2335,39 +2251,39 @@ inline static void stbtt__fill_active_edges_new(std::vector<float>& scanline, fl
 					const float y2{ (x + 1 - x0) / dx + y_top };
 
 					if (x0 < x1 && xb > x2)
-					{         // three segments descending down-right
+					{	// three segments descending down-right
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, x1, y1);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x1, y1, x2, y2);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x2, y2, xb, y_bottom);
 					}
 					else if (xb < x1 && x0 > x2)
-					{  // three segments descending down-left
+					{	// three segments descending down-left
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, x2, y2);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x2, y2, x1, y1);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x1, y1, xb, y_bottom);
 					}
 					else if (x0 < x1 && xb > x1)
-					{  // two segments across x, down-right
+					{	// two segments across x, down-right
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, x1, y1);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x1, y1, xb, y_bottom);
 					}
 					else if (xb < x1 && x0 > x1)
-					{  // two segments across x, down-left
+					{	// two segments across x, down-left
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, x1, y1);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x1, y1, xb, y_bottom);
 					}
 					else if (x0 < x2 && xb > x2)
-					{  // two segments across x+1, down-right
+					{	// two segments across x+1, down-right
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, x2, y2);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x2, y2, xb, y_bottom);
 					}
 					else if (xb < x2 && x0 > x2)
-					{  // two segments across x+1, down-left
+					{	// two segments across x+1, down-left
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, x2, y2);
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x2, y2, xb, y_bottom);
 					}
 					else
-					{  // one segment
+					{	// one segment
 						stbtt__handle_clipped_edge(scanline.data(), x, e, x0, y_top, xb, y_bottom);
 					}
 				}
@@ -2379,7 +2295,7 @@ inline static void stbtt__fill_active_edges_new(std::vector<float>& scanline, fl
 }
 
 // directly AA rasterize edges w/o supersampling
-inline static void stbtt__rasterize_sorted_edges(stbtt__bitmap& result, stbtt__edge* e, const std::int_fast32_t n, const std::int_fast32_t vsubsample, const std::int_fast32_t off_x, const std::int_fast32_t off_y, void* userdata) //-V751
+inline static void stbtt__rasterize_sorted_edges(stbtt__bitmap& result, stbtt__edge* e, const std::int_fast32_t n, const std::int_fast32_t vsubsample, const std::int_fast32_t off_x, const std::int_fast32_t off_y, void* userdata)
 {
 	stbtt__hheap hh{};
 	stbtt__active_edge* active{};
@@ -2606,7 +2522,7 @@ using stbtt__point = struct
 	float y{};
 };
 
-inline static void stbtt__rasterize(stbtt__bitmap& result, stbtt__point* pts, const std::int_fast32_t* wcount, const std::int_fast32_t windings, const float scale_x, const float scale_y, const float shift_x, const float shift_y, const std::int_fast32_t off_x, const std::int_fast32_t off_y, const std::int_fast32_t invert, void* userdata)
+inline static void stbtt__rasterize(stbtt__bitmap& result, stbtt__point* pts, const std::vector<std::int_fast32_t>& wcount, const std::int_fast32_t windings, const float scale_x, const float scale_y, const float shift_x, const float shift_y, const std::int_fast32_t off_x, const std::int_fast32_t off_y, const std::int_fast32_t invert, void* userdata)
 {
 	// now we have to blow out the windings into explicit edge lists
 	std::int_fast32_t n{};
@@ -2616,18 +2532,12 @@ inline static void stbtt__rasterize(stbtt__bitmap& result, stbtt__point* pts, co
 		n += wcount[i];
 	}
 
-	std::vector<stbtt__edge> e(n + 1); // add an extra one as a sentinel //-V121
-
-	if (e.empty())
-	{
-		return;
-	}
+	std::vector<stbtt__edge> e(n + 1); // add an extra one as a sentinel
 
 	n = 0;
 
 	std::int_fast32_t m{};
 	const float y_scale_inv{ (invert != 0) ? -scale_y : scale_y };
-
 	constexpr std::int_fast32_t vsubsample{ 1 };
 	// vsubsample should divide 255 evenly; otherwise we won't reach full opacity
 
@@ -2755,12 +2665,12 @@ inline static void stbtt__tesselate_cubic(std::vector<stbtt__point>& points, std
 	else
 	{
 		stbtt__add_point(points, num_points, x3, y3);
-		num_points = num_points +1 ;
+		++num_points;
 	}
 }
 
 // returns number of contours
-inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertices, const std::int_fast32_t num_verts, const float objspace_flatness, std::int_fast32_t** contour_lengths, std::int_fast32_t& num_contours)
+inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertices, const std::int_fast32_t num_verts, const float objspace_flatness, std::vector<std::int_fast32_t>& contour_lengths, std::int_fast32_t& num_contours)
 {
 	std::int_fast32_t n{};
 
@@ -2778,9 +2688,9 @@ inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertic
 		return {};
 	}
 
-	*contour_lengths = new int_fast32_t[n]; //-V121
+	contour_lengths.resize(static_cast<std::size_t>(n));
 
-	if (*contour_lengths == nullptr)
+	if (contour_lengths.empty())
 	{
 		num_contours = 0;
 		return {};
@@ -2804,7 +2714,6 @@ inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertic
 
 			if (points.empty()) //-V668
 			{
-				delete[] *contour_lengths;
 				num_contours = 0;
 				return {};
 			}
@@ -2822,7 +2731,7 @@ inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertic
 					// start the next contour
 					if (n >= 0)
 					{
-						(*contour_lengths)[n] = num_points - start;
+						contour_lengths[n] = num_points - start;
 					}
 
 					++n;
@@ -2857,7 +2766,7 @@ inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertic
 			}
 		}
 
-		(*contour_lengths)[n] = num_points - start;
+		contour_lengths[n] = num_points - start;
 	}
 
 	return points;
@@ -2867,13 +2776,13 @@ inline void stbtt_Rasterize(stbtt__bitmap& result, const float flatness_in_pixel
 {
 	const float scale{ scale_x > scale_y ? scale_y : scale_x };
 	std::int_fast32_t winding_count{};
-	std::unique_ptr<std::int_fast32_t> winding_lengths;
+	std::vector<std::int_fast32_t> winding_lengths;
 
-	std::vector<stbtt__point> windings{ stbtt_FlattenCurves(vertices.data(), num_verts, flatness_in_pixels / scale, reinterpret_cast<std::int_fast32_t**>(&winding_lengths), winding_count) };
+	std::vector<stbtt__point> windings{ stbtt_FlattenCurves(vertices.data(), num_verts, flatness_in_pixels / scale, winding_lengths, winding_count) };
 
 	if (!windings.empty())
 	{
-		stbtt__rasterize(result, windings.data(), winding_lengths.get(), winding_count, scale_x, scale_y, shift_x, shift_y, x_off, y_off, invert, userdata);
+		stbtt__rasterize(result, windings.data(), winding_lengths, winding_count, scale_x, scale_y, shift_x, shift_y, x_off, y_off, invert, userdata);
 	}
 }
 
@@ -2882,9 +2791,12 @@ inline void stbtt_MakeGlyphBitmapSubpixel(const stbtt_fontinfo& info, unsigned c
 	std::vector<stbtt_vertex> vertices;
 	const std::int_fast32_t num_verts{ stbtt_GetGlyphShape(info, glyph, vertices) };
 	std::int_fast32_t ix0{};
-	std::int_fast32_t iy0{};
+	std::int_fast32_t iy0{};	
+	std::int_fast32_t ix1{};
+	std::int_fast32_t iy1{};
 
-	stbtt_GetGlyphBitmapBoxSubpixel(info, glyph, scale_x, scale_y, shift_x, shift_y, &ix0, &iy0, nullptr, nullptr);
+
+	stbtt_GetGlyphBitmapBoxSubpixel(info, glyph, scale_x, scale_y, shift_x, shift_y, ix0, iy0, ix1, iy1);
 
 	if (stbtt__bitmap gbm{ out_w, out_h, out_stride, output }; gbm.w != 0 && gbm.h != 0)
 	{
@@ -2929,8 +2841,8 @@ inline static std::int_fast32_t stbtt_BakeFontBitmap_internal(std::vector<unsign
 		std::int_fast32_t y1{};
 		const std::int_fast32_t g{ stbtt_FindGlyphIndex(f, first_char + i) };
 
-		stbtt_GetGlyphHMetrics(f, g, &advance, &lsb);
-		stbtt_GetGlyphBitmapBox(f, g, scale, scale, &x0, &y0, &x1, &y1);
+		stbtt_GetGlyphHMetrics(f, g, advance, lsb);
+		stbtt_GetGlyphBitmapBox(f, g, scale, scale, x0, y0, x1, y1);
 
 		const std::int_fast32_t gw{ x1 - x0 };
 		const std::int_fast32_t gh{ y1 - y0 };
@@ -3003,27 +2915,7 @@ inline std::int_fast32_t stbtt_InitFont(stbtt_fontinfo& info, std::vector<unsign
 
 /*
 ------------------------------------------------------------------------------
-This software is available under 2 licenses -- choose whichever you prefer.
-------------------------------------------------------------------------------
-ALTERNATIVE A - MIT License
-Copyright (c) 2017 Sean Barrett
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-------------------------------------------------------------------------------
-ALTERNATIVE B - Public Domain (www.unlicense.org)
+Public Domain (www.unlicense.org)
 This is free and unencumbered software released into the public domain.
 Anyone is free to copy, modify, publish, use, compile, sell, or distribute this
 software, either in source code form or as a compiled binary, for any purpose,

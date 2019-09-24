@@ -81,7 +81,7 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 		lwmf::IntPointStruct i0{};
 		lwmf::IntPointStruct i1{};
 
-		stbtt_GetCodepointBitmapBox(FontInfo, Char, 1.0F, 1.0F, &i0.X, &i0.Y, &i1.X, &i1.Y);
+		stbtt_GetCodepointBitmapBox(FontInfo, Char, 1.0F, 1.0F, i0.X, i0.Y, i1.X, i1.Y);
 		Width += 1 + static_cast<std::int_fast32_t>((i1.X * FontSize / 1000.0F) + 1.0F) - static_cast<std::int_fast32_t>(i0.X * FontSize / 1000.0F);
 	}
 
