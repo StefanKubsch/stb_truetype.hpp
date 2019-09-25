@@ -179,10 +179,10 @@ struct stbtt_aligned_quad
 };
 
 void stbtt_GetBakedQuad(const std::vector<stbtt_bakedchar>& chardata, std::int_fast32_t pw, std::int_fast32_t ph,	// same data as above
-                               std::int_fast32_t char_index,														// character to display
-                               float& xpos, const float& ypos,														// pointers to current position in screen pixel space
-                               stbtt_aligned_quad& q,																// output: quad to draw
-                               std::int_fast32_t opengl_fillrule);													// true if opengl fill rule; false if DX9 or earlier
+						std::int_fast32_t char_index,																// character to display
+						float& xpos, const float& ypos,																// pointers to current position in screen pixel space
+						stbtt_aligned_quad& q,																		// output: quad to draw
+						std::int_fast32_t opengl_fillrule);															// true if opengl fill rule; false if DX9 or earlier
 // Call GetBakedQuad with char_index = 'character - first_char', and it
 // creates the quad you need to draw and advances the current position.
 //
@@ -199,15 +199,14 @@ void stbtt_GetBakedQuad(const std::vector<stbtt_bakedchar>& chardata, std::int_f
 //
 //
 
-
 // The following structure is defined publicly so you can declare one on
 // the stack or as a global or etc, but you should treat it as opaque.
 struct stbtt_fontinfo
 {
 	void* userdata{};
-	unsigned char* data{};							// pointer to .ttf file
-	std::int_fast32_t fontstart{};					// offset of start of font
-	std::int_fast32_t numGlyphs{};					// number of glyphs, needed for range checking
+	unsigned char* data{};					// pointer to .ttf file
+	std::int_fast32_t fontstart{};			// offset of start of font
+	std::int_fast32_t numGlyphs{};			// number of glyphs, needed for range checking
 	// table locations as offset from start of .ttf
 	std::int_fast32_t loca{};
 	std::int_fast32_t head{};
@@ -216,14 +215,14 @@ struct stbtt_fontinfo
 	std::int_fast32_t hmtx{};
 	std::int_fast32_t kern{};
 	std::int_fast32_t gpos{};
-	std::int_fast32_t index_map{};                  // a cmap mapping for our chosen character encoding
-	std::int_fast32_t indexToLocFormat{};           // format needed to map from glyph index to glyph
-	stbtt__buf cff{};								// cff font data
-	stbtt__buf charstrings{};						// the charstring index
-	stbtt__buf gsubrs{};							// global charstring subroutines index
-	stbtt__buf subrs{};								// private charstring subroutines index
-	stbtt__buf fontdicts{};							// array of font dicts
-	stbtt__buf fdselect;							// map from glyph to fontdict
+	std::int_fast32_t index_map{};			// a cmap mapping for our chosen character encoding
+	std::int_fast32_t indexToLocFormat{};	// format needed to map from glyph index to glyph
+	stbtt__buf cff{};						// cff font data
+	stbtt__buf charstrings{};				// the charstring index
+	stbtt__buf gsubrs{};					// global charstring subroutines index
+	stbtt__buf subrs{};						// private charstring subroutines index
+	stbtt__buf fontdicts{};					// array of font dicts
+	stbtt__buf fdselect;					// map from glyph to fontdict
 };
 
 std::int_fast32_t stbtt_InitFont(stbtt_fontinfo& info, std::vector<unsigned char>& data, std::int_fast32_t offset);
@@ -232,7 +231,6 @@ std::int_fast32_t stbtt_InitFont(stbtt_fontinfo& info, std::vector<unsigned char
 // the stbtt_fontinfo yourself, and stbtt_InitFont will fill it out. You don't
 // need to do anything special to free it, because the contents are pure
 // value data with no additional data structures. Returns 0 on failure.
-
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -244,7 +242,6 @@ std::int_fast32_t stbtt_FindGlyphIndex(const stbtt_fontinfo& info, std::int_fast
 // going to process, then use glyph-based functions instead of the
 // codepoint-based functions.
 // Returns 0 if the character codepoint is not defined in the font.
-
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -318,7 +315,7 @@ void stbtt_GetCodepointBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fa
 // on glyph indices instead of Unicode codepoints (for efficiency)
 void stbtt_MakeGlyphBitmap(const stbtt_fontinfo& info, unsigned char* output, std::int_fast32_t out_w, std::int_fast32_t out_h, std::int_fast32_t out_stride, float scale_x, float scale_y, std::int_fast32_t glyph);
 void stbtt_MakeGlyphBitmapSubpixel(const stbtt_fontinfo& info, unsigned char* output, std::int_fast32_t out_w, std::int_fast32_t out_h, std::int_fast32_t out_stride, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t glyph);
-void stbtt_GetGlyphBitmapBox(const stbtt_fontinfo& font, std::int_fast32_t glyph, float scale_x, float scale_y, std::int_fast32_t* ix0, std::int_fast32_t* iy0, std::int_fast32_t* ix1, std::int_fast32_t* iy1);
+void stbtt_GetGlyphBitmapBox(const stbtt_fontinfo& font, std::int_fast32_t glyph, float scale_x, float scale_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1);
 void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo& font, std::int_fast32_t glyph, float scale_x, float scale_y, float shift_x, float shift_y, std::int_fast32_t& ix0, std::int_fast32_t& iy0, std::int_fast32_t& ix1, std::int_fast32_t& iy1);
 
 struct stbtt__bitmap
@@ -330,15 +327,15 @@ struct stbtt__bitmap
 };
 
 // rasterize a shape with quadratic beziers into a bitmap
-void stbtt_Rasterize(stbtt__bitmap& result,												// 1-channel bitmap to draw into
-                               float flatness_in_pixels,								// allowable error of curve in pixels
-                               std::vector<stbtt_vertex>& vertices,						// array of vertices defining shape
-                               std::int_fast32_t num_verts,								// number of vertices in above array
-                               float scale_x, float scale_y,							// scale applied to input vertices
-                               float shift_x, float shift_y,							// translation applied to input vertices
-                               std::int_fast32_t x_off, std::int_fast32_t y_off,		// another translation applied to input
-                               std::int_fast32_t invert,								// if non-zero, vertically flip shape
-                               void* userdata);											// context for to STBTT_MALLOC
+void stbtt_Rasterize(stbtt__bitmap& result,									// 1-channel bitmap to draw into
+						float flatness_in_pixels,							// allowable error of curve in pixels
+						std::vector<stbtt_vertex>& vertices,				// array of vertices defining shape
+						std::int_fast32_t num_verts,						// number of vertices in above array
+						float scale_x, float scale_y,						// scale applied to input vertices
+						float shift_x, float shift_y,						// translation applied to input vertices
+						std::int_fast32_t x_off, std::int_fast32_t y_off,	// another translation applied to input
+						std::int_fast32_t invert,							// if non-zero, vertically flip shape
+						void* userdata);									// context for to STBTT_MALLOC
 
 enum class platformID
 {
@@ -417,21 +414,20 @@ inline static stbtt__buf stbtt__new_buf(void* p, const std::size_t size)
 	stbtt__buf r{};
 	std::memcpy(r.data.data(), p, size * sizeof(void*)); //-V522
 	r.size = static_cast<std::int_fast32_t>(size);
-	r.cursor = 0;
 	return r;
 }
 
-inline static stbtt__buf stbtt__buf_range(const stbtt__buf& b, const std::int_fast32_t o, const std::int_fast32_t s)
+inline static stbtt__buf stbtt__buf_range(const stbtt__buf& b, const std::int_fast32_t o, const std::int_fast32_t size)
 {
 	stbtt__buf r{ stbtt__new_buf(nullptr, 0) };
 
-	if (o < 0 || s < 0 || o > b.size || s > b.size - o)
+	if (o < 0 || size < 0 || o > b.size || size > b.size - o)
 	{
 		return r;
 	}
 
-	std::memcpy(r.data.data(), reinterpret_cast<void*>(b.data[o]), static_cast<std::size_t>(s) * sizeof(void*));
-	r.size = s;
+	std::memcpy(r.data.data(), reinterpret_cast<void*>(b.data[o]), static_cast<std::size_t>(size) * sizeof(void*));
+	r.size = size;
 	return r;
 }
 
@@ -720,8 +716,7 @@ inline static std::int_fast32_t stbtt_InitFont_internal(stbtt_fontinfo& info, st
 	const std::int_fast32_t t{ stbtt__find_table(data.data(), fontstart, "maxp") };
 	info.numGlyphs = (t != 0) ? ttUSHORT(data.data() + t + 4) : 0xFFFF;
 
-	// find a cmap encoding table we understand *now* to avoid searching
-	// later.
+	// find a cmap encoding table we understand *now* to avoid searching later.
 	// the same regardless of glyph.
 	const std::int_fast32_t numTables{ ttUSHORT(data.data() + cmap + 2) };
 	info.index_map = 0;
@@ -779,10 +774,9 @@ inline std::int_fast32_t stbtt_FindGlyphIndex(const stbtt_fontinfo& info, const 
 	const std::int_fast32_t format{ ttUSHORT(data + index_map + 0) };
 
 	if (format == 0)
-	{ // apple byte encoding
-		const std::int_fast32_t bytes{ ttUSHORT(data + index_map + 2) };
-
-		if (unicode_codepoint < bytes - 6)
+	{
+		// apple byte encoding
+		if (unicode_codepoint < ttUSHORT(data + index_map + 2) - 6)
 		{
 			return *static_cast<unsigned char*>(data + index_map + 6 + unicode_codepoint);
 		}
@@ -792,10 +786,7 @@ inline std::int_fast32_t stbtt_FindGlyphIndex(const stbtt_fontinfo& info, const 
 
 	if (format == 6)
 	{
-		const std::int_fast32_t first{ ttUSHORT(data + index_map + 6) };
-		const std::int_fast32_t count{ ttUSHORT(data + index_map + 8) };
-
-		if (unicode_codepoint >= first && unicode_codepoint < first + count)
+		if (const std::int_fast32_t first{ ttUSHORT(data + index_map + 6) }; unicode_codepoint >= first && unicode_codepoint < first + ttUSHORT(data + index_map + 8))
 		{
 			return ttUSHORT(data + index_map + 10 + (unicode_codepoint - first) * 2);
 		}
@@ -838,9 +829,8 @@ inline std::int_fast32_t stbtt_FindGlyphIndex(const stbtt_fontinfo& info, const 
 		while (entrySelector != 0)
 		{
 			searchRange >>= 1;
-			const std::int_fast32_t end{ ttUSHORT(data + search + (searchRange << 1)) };
 
-			if (unicode_codepoint > end)
+			if (unicode_codepoint > ttUSHORT(data + search + (searchRange << 1)))
 			{
 				search += searchRange << 1;
 			}
@@ -859,7 +849,7 @@ inline std::int_fast32_t stbtt_FindGlyphIndex(const stbtt_fontinfo& info, const 
 				return 0;
 			}
 
-			std::int_fast32_t offset{ ttUSHORT(data + index_map + 14 + segcount * 6 + 2 + 2 * item) };
+			const std::int_fast32_t offset{ ttUSHORT(data + index_map + 14 + segcount * 6 + 2 + 2 * item) };
 
 			if (offset == 0)
 			{
@@ -872,9 +862,8 @@ inline std::int_fast32_t stbtt_FindGlyphIndex(const stbtt_fontinfo& info, const 
 
 	if (format == 12 || format == 13)
 	{
-		const std::int_fast32_t ngroups{ ttULONG(data + index_map + 12) };
 		std::int_fast32_t low{};
-		std::int_fast32_t high{ ngroups };
+		std::int_fast32_t high{ ttULONG(data + index_map + 12) };
 		// Binary search the right group.
 
 		while (low < high)
@@ -1013,7 +1002,6 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 	if (numberOfContours > 0)
 	{
 		unsigned char* endPtsOfContours{ (data + g + 10) };
-		const std::int_fast32_t ins{ ttUSHORT(data + g + 10 + (numberOfContours << 1)) };
 		const std::int_fast32_t n{ 1 + ttUSHORT(endPtsOfContours + (numberOfContours << 1) - 2) };
 		const std::int_fast32_t m{ n + (numberOfContours << 1) };  // a loose bound on how many vertices we might need
 		vertices.resize(m);
@@ -1032,7 +1020,7 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 
 		// first load flags
 		unsigned char flags{};
-		unsigned char* points{ data + g + 10 + (numberOfContours << 1) + 2 + ins };
+		unsigned char* points{ data + g + 10 + (numberOfContours << 1) + 2 + ttUSHORT(data + g + 10 + (numberOfContours << 1)) };
 
 		for (std::int_fast32_t i{}; i < n; ++i)
 		{
@@ -1086,7 +1074,7 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 
 			if ((flags & 4) != 0)
 			{
-				short dy{ *points++ };
+				const short dy{ *points++ };
 				y += (flags & 32) != 0 ? dy : -dy;
 			}
 			else
@@ -1748,13 +1736,12 @@ inline static std::int_fast32_t stbtt__run_charstring(const stbtt_fontinfo& info
 					return STBTT__CSERR("call(g|)subr stack");
 				}
 
-				const std::int_fast32_t v{ static_cast<std::int_fast32_t>(s[--sp]) };
-
 				if (subr_stack_height >= 10)
 				{
 					return STBTT__CSERR("recursion limit");
 				}
 
+				const std::int_fast32_t v{ static_cast<std::int_fast32_t>(s[--sp]) };
 				subr_stack[subr_stack_height++] = b;
 				b = stbtt__get_subr(b0 == 0x0A ? subrs : info.gsubrs, v);
 
@@ -1840,6 +1827,7 @@ inline static std::int_fast32_t stbtt__run_charstring(const stbtt_fontinfo& info
 					default:
 					{
 						return STBTT__CSERR("unimplemented");
+						break;
 					}
 				}
 				break;
@@ -1851,10 +1839,9 @@ inline static std::int_fast32_t stbtt__run_charstring(const stbtt_fontinfo& info
 					return STBTT__CSERR("reserved operator");
 				}
 
-				float f{};
-
 				// push immediate
-				b0 == 255 ? f = static_cast<float>(static_cast<std::int_fast32_t>(stbtt__buf_get((b), 4)) / 0x10000) : (stbtt__buf_skip(b, -1),  f = static_cast<float>(stbtt__cff_int(b)));
+				float f{};
+				b0 == 255 ? f = static_cast<float>(static_cast<std::int_fast32_t>(stbtt__buf_get((b), 4)) / 0x10000) : (stbtt__buf_skip(b, -1), f = static_cast<float>(stbtt__cff_int(b)));
 
 				if (sp >= 48)
 				{
@@ -1881,8 +1868,7 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeT2(const stbtt_fontinfo& inf
 	if (stbtt__run_charstring(info, glyph_index, count_ctx) != 0)
 	{
 		pvertices.resize(static_cast<std::size_t>(count_ctx.num_vertices));
-
-		stbtt__csctx output_ctx{ 0, 0, 0.0F, 0.0F, 0.0F, 0.0F, 0, 0, 0, 0, pvertices, 0 };
+		stbtt__csctx output_ctx{};
 
 		if (stbtt__run_charstring(info, glyph_index, output_ctx) != 0)
 		{
@@ -2038,7 +2024,6 @@ inline static void stbtt__hheap_cleanup(stbtt__hheap& hh, void* userdata)
 	{
 		stbtt__hheap_chunk* n{ c->next };
 		static_cast<void>(userdata), free(c);
-
 		c = n;
 	}
 }
@@ -2123,6 +2108,7 @@ inline static void stbtt__handle_clipped_edge(float* scanline, const std::int_fa
 	}
 	else if (x0 >= x + 1 && x1 >= x + 1)
 	{
+		// dummy
 	}
 	else
 	{
@@ -2142,9 +2128,7 @@ inline static void stbtt__fill_active_edges_new(std::vector<float>& scanline, fl
 
 		if (e->fdx == 0.0F)
 		{
-			const float x0{ e->fx };
-
-			if (x0 < len)
+			if (const float x0{ e->fx }; x0 < len)
 			{
 				if (x0 >= 0.0F)
 				{
@@ -2182,7 +2166,7 @@ inline static void stbtt__fill_active_edges_new(std::vector<float>& scanline, fl
 					const std::int_fast32_t x{ static_cast<std::int_fast32_t>(x_top) };
 					const float height{ sy1 - sy0 };
 
-					scanline[x] += e->direction * (1 - ((x_top - x) + (x_bottom - x)) / 2)  * height;
+					scanline[x] += e->direction * (1 - ((x_top - x) + (x_bottom - x)) / 2) * height;
 					scanline_fill[x] += e->direction * height; // everything right of this pixel is filled
 				}
 				else
@@ -2712,7 +2696,7 @@ inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertic
 		{
 			points.resize(static_cast<std::size_t>(num_points));
 
-			if (points.empty()) //-V668
+			if (points.empty())
 			{
 				num_contours = 0;
 				return {};
@@ -2791,10 +2775,9 @@ inline void stbtt_MakeGlyphBitmapSubpixel(const stbtt_fontinfo& info, unsigned c
 	std::vector<stbtt_vertex> vertices;
 	const std::int_fast32_t num_verts{ stbtt_GetGlyphShape(info, glyph, vertices) };
 	std::int_fast32_t ix0{};
-	std::int_fast32_t iy0{};	
+	std::int_fast32_t iy0{};
 	std::int_fast32_t ix1{};
 	std::int_fast32_t iy1{};
-
 
 	stbtt_GetGlyphBitmapBoxSubpixel(info, glyph, scale_x, scale_y, shift_x, shift_y, ix0, iy0, ix1, iy1);
 
