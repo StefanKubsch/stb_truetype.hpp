@@ -58,9 +58,9 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 
 	// Get raw (binary) font data
 	std::ifstream FontFile(FontName.c_str(), std::ifstream::binary);
-	FontFile.seekg(0, FontFile.end);
+	FontFile.seekg(0, std::ios::end);
 	std::vector<unsigned char> FontBuffer(FontFile.tellg());
-	FontFile.seekg(0, FontFile.beg);
+	FontFile.seekg(0, std::ios::beg);
 	FontFile.read(reinterpret_cast<char*>(FontBuffer.data()), FontBuffer.size());
 
 	// Render the glyphs for ASCII chars from 32 ("space") to 127 (last official ASCII char)
@@ -109,7 +109,7 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 		const lwmf::IntPointStruct Pos{ static_cast<std::int_fast32_t>(Quad.s0 * Width), static_cast<std::int_fast32_t>(Quad.t0 * Height) };
 		Glyphs[Char].Width = static_cast<std::int_fast32_t>(static_cast<std::int_fast32_t>(((Quad.s1 - Quad.s0) * Width) + 1.0F));
 		Glyphs[Char].Height = static_cast<std::int_fast32_t>(static_cast<std::int_fast32_t>(((Quad.t1 - Quad.t0) * Height) + 1.0F));
-		Glyphs[Char].Advance = static_cast<std::int_fast32_t>(QuadPos.X + 0.5F);
+		Glyphs[Char].Advance = static_cast<std::int_fast32_t>(std::round(QuadPos.X));
 		Glyphs[Char].Baseline = static_cast<std::int_fast32_t>(-Quad.y0);
 
 		// Blit single glyphs to individual textures
