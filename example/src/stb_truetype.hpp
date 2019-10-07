@@ -203,7 +203,7 @@ void stbtt_GetBakedQuad(const std::vector<stbtt_bakedchar>& chardata, std::int_f
 // the stack or as a global or etc, but you should treat it as opaque.
 struct stbtt_fontinfo
 {
-	void* userdata{};
+	std::shared_ptr<void> userdata;
 	unsigned char* data{};					// pointer to .ttf file
 	std::int_fast32_t fontstart{};			// offset of start of font
 	std::int_fast32_t numGlyphs{};			// number of glyphs, needed for range checking
@@ -335,7 +335,7 @@ void stbtt_Rasterize(stbtt__bitmap& result,									// 1-channel bitmap to draw 
 						float shift_x, float shift_y,						// translation applied to input vertices
 						std::int_fast32_t x_off, std::int_fast32_t y_off,	// another translation applied to input
 						std::int_fast32_t invert,							// if non-zero, vertically flip shape
-						void* userdata);									// context for to STBTT_MALLOC
+						std::shared_ptr<void> userdata);					// context for to STBTT_MALLOC
 
 enum class platformID
 {
@@ -966,7 +966,7 @@ inline std::int_fast32_t stbtt_GetGlyphBox(const stbtt_fontinfo& info, const std
 	return 1;
 }
 
-inline static std::int_fast32_t stbtt__close_shape(stbtt_vertex* vertices, std::int_fast32_t num_vertices, const std::int_fast32_t was_off, const std::int_fast32_t start_off, const std::int_fast32_t sx, const std::int_fast32_t sy, const std::int_fast32_t scx, const std::int_fast32_t scy, const std::int_fast32_t cx, const std::int_fast32_t cy)
+inline static std::int_fast32_t stbtt__close_shape(std::vector<stbtt_vertex>& vertices, std::int_fast32_t num_vertices, const std::int_fast32_t was_off, const std::int_fast32_t start_off, const std::int_fast32_t sx, const std::int_fast32_t sy, const std::int_fast32_t scx, const std::int_fast32_t scy, const std::int_fast32_t cx, const std::int_fast32_t cy)
 {
 	if (start_off != 0)
 	{
@@ -1110,7 +1110,7 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 			{
 				if (i != 0)
 				{
-					num_vertices = stbtt__close_shape(vertices.data(), num_vertices, was_off, start_off, sx, sy, scx, scy, cx, cy);
+					num_vertices = stbtt__close_shape(vertices, num_vertices, was_off, start_off, sx, sy, scx, scy, cx, cy);
 				}
 
 				// now start the new one
@@ -1169,7 +1169,7 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 			}
 		}
 
-		num_vertices = stbtt__close_shape(vertices.data(), num_vertices, was_off, start_off, sx, sy, scx, scy, cx, cy);
+		num_vertices = stbtt__close_shape(vertices, num_vertices, was_off, start_off, sx, sy, scx, scy, cx, cy);
 	}
 	else if (numberOfContours == -1)
 	{
@@ -1239,9 +1239,8 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 
 			// Get indexed glyph.
 			std::vector<stbtt_vertex> comp_verts;
-			const std::int_fast32_t comp_num_verts{ stbtt_GetGlyphShape(info, gidx, comp_verts) };
 
-			if (comp_num_verts > 0)
+			if (const std::int_fast32_t comp_num_verts{ stbtt_GetGlyphShape(info, gidx, comp_verts) }; comp_num_verts > 0)
 			{
 				// Transform vertices.
 				for (std::int_fast32_t i{}; i < comp_num_verts; ++i)
@@ -2501,7 +2500,7 @@ using stbtt__point = struct
 	float y{};
 };
 
-inline static void stbtt__rasterize(stbtt__bitmap& result, stbtt__point* pts, const std::vector<std::int_fast32_t>& wcount, const std::int_fast32_t windings, const float scale_x, const float scale_y, const float shift_x, const float shift_y, const std::int_fast32_t off_x, const std::int_fast32_t off_y, const std::int_fast32_t invert, void* userdata)
+inline static void stbtt__rasterize(stbtt__bitmap& result, std::vector<stbtt__point>& pts, const std::vector<std::int_fast32_t>& wcount, const std::int_fast32_t windings, const float scale_x, const float scale_y, const float shift_x, const float shift_y, const std::int_fast32_t off_x, const std::int_fast32_t off_y, const std::int_fast32_t invert, void* userdata)
 {
 	// now we have to blow out the windings into explicit edge lists
 	std::int_fast32_t n{};
@@ -2515,12 +2514,11 @@ inline static void stbtt__rasterize(stbtt__bitmap& result, stbtt__point* pts, co
 
 	n = 0;
 
-	std::int_fast32_t m{};
 	const float y_scale_inv{ (invert != 0) ? -scale_y : scale_y };
 
-	for (std::int_fast32_t i{}; i < windings; ++i)
+	for (std::int_fast32_t m{}, i{}; i < windings; ++i)
 	{
-		const stbtt__point* p{ pts + m };
+		const std::vector<stbtt__point> p(pts.begin() + m, pts.end());
 		m += wcount[i];
 
 		for (std::int_fast32_t j{ wcount[i] - 1 }, k{}; k < wcount[i]; j = k++)
@@ -2749,7 +2747,7 @@ inline static std::vector<stbtt__point> stbtt_FlattenCurves(stbtt_vertex* vertic
 	return points;
 }
 
-inline void stbtt_Rasterize(stbtt__bitmap& result, const float flatness_in_pixels, std::vector<stbtt_vertex>& vertices, const std::int_fast32_t num_verts, const float scale_x, const float scale_y, const float shift_x, const float shift_y, const std::int_fast32_t x_off, const std::int_fast32_t y_off, const std::int_fast32_t invert, void* userdata)
+inline void stbtt_Rasterize(stbtt__bitmap& result, const float flatness_in_pixels, std::vector<stbtt_vertex>& vertices, const std::int_fast32_t num_verts, const float scale_x, const float scale_y, const float shift_x, const float shift_y, const std::int_fast32_t x_off, const std::int_fast32_t y_off, const std::int_fast32_t invert, std::shared_ptr<void> userdata)
 {
 	const float scale{ scale_x > scale_y ? scale_y : scale_x };
 	std::int_fast32_t winding_count{};
@@ -2759,7 +2757,7 @@ inline void stbtt_Rasterize(stbtt__bitmap& result, const float flatness_in_pixel
 
 	if (!windings.empty())
 	{
-		stbtt__rasterize(result, windings.data(), winding_lengths, winding_count, scale_x, scale_y, shift_x, shift_y, x_off, y_off, invert, userdata);
+		stbtt__rasterize(result, windings, winding_lengths, winding_count, scale_x, scale_y, shift_x, shift_y, x_off, y_off, invert, &userdata);
 	}
 }
 
