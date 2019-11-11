@@ -28,7 +28,7 @@
 #include "./src/stb_truetype.hpp"
 
 // "ScreenTexture" is the main render target in our demo!
-inline lwmf::TextureStruct ScreenTexture;
+inline lwmf::TextureStruct ScreenTexture{};
 
 class GFX_TextClass final
 {
@@ -47,7 +47,7 @@ private:
 	};
 
 	lwmf::ShaderClass GlyphShader{};
-	std::vector<GlyphStruct> Glyphs;
+	std::vector<GlyphStruct> Glyphs{};
 
 	std::int_fast32_t FontHeight{};
 };
@@ -222,8 +222,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_INPUT:
 		{
-			static RAWINPUT RawDev;
-			static UINT DataSize{ sizeof(RawDev) };
+			static RAWINPUT RawDev{};
+			static UINT DataSize{ sizeof(RAWINPUT) };
 			static UINT HeaderSize{ sizeof(RAWINPUTHEADER) };
 			HRAWINPUT Handle{ reinterpret_cast<HRAWINPUT>(lParam) };
 			GetRawInputData(Handle, RID_INPUT, &RawDev, &DataSize, HeaderSize);
