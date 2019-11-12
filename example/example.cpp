@@ -176,7 +176,7 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 
 	while (!Quit)
 	{
-		static MSG Message{};
+		MSG Message{};
 
 		while (PeekMessage(&Message, nullptr, 0, 0, PM_REMOVE))
 		{
@@ -222,9 +222,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_INPUT:
 		{
-			static RAWINPUT RawDev{};
-			static UINT DataSize{ sizeof(RAWINPUT) };
-			static UINT HeaderSize{ sizeof(RAWINPUTHEADER) };
+			RAWINPUT RawDev{};
+			UINT DataSize{ sizeof(RAWINPUT) };
+			UINT HeaderSize{ sizeof(RAWINPUTHEADER) };
 			HRAWINPUT Handle{ reinterpret_cast<HRAWINPUT>(lParam) };
 			GetRawInputData(Handle, RID_INPUT, &RawDev, &DataSize, HeaderSize);
 
