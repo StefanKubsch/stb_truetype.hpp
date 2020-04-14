@@ -147,7 +147,7 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 	// Create window and OpenGL context
 	lwmf::CreateOpenGLWindow(lwmf::WindowInstance, ScreenTexture, 1280, 720, "stb_truetype.hpp example - press ESC to exit!", false);
 	// Set VSync: 0 = off, -1 = on (adaptive vsync = smooth as fuck)
-	lwmf::SetVSync(-1);
+	lwmf::SetVSync(0);
 	// Load OpenGL/wgl extensions
 	lwmf::InitOpenGLLoader();
 	// Check for SSE
