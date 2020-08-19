@@ -29,7 +29,6 @@ WHAT I DID SO FAR:
 ------------------
 
   - fixed all warnings reported by PVS-Studio and clang-tidy (use brackets etc.)
-  - replaced all "typedef" with "using"
   - replaced "malloc/free" with "new/delete"
   - replaced all C-style casts with modern-style C++ cast (e.g. static_cast)
   - initialised all variables and narrowed their scopes if possible
