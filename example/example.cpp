@@ -60,8 +60,8 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 	FontFile.seekg(0, std::ios::beg);
 	FontFile.read(reinterpret_cast<char*>(FontBuffer.data()), FontBuffer.size());
 
-	// Render the glyphs for ASCII chars from 32 ("space") to 127 (last official ASCII char)
-	// This makes 96 printable chars
+	// Render the glyphs for ASCII chars
+	// This makes 128 chars, the last 96 are printable (from 32 = "space" on)
 
 	stbtt_fontinfo FontInfo{};
 	stbtt_InitFont(FontInfo, FontBuffer, 0);
@@ -69,10 +69,9 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 	std::int_fast32_t Width{};
 	FontHeight = FontSize + 1;
 	const std::int_fast32_t Height{ FontHeight + 5 };
-	constexpr std::int_fast32_t FirstASCIIChar{ 32 };
-	constexpr std::int_fast32_t LastASCIIChar{ 127 };
+	constexpr std::int_fast32_t LastASCIIChar{ 127 }; // All ASCII chars except DEL (127)
 
-	for (char Char{ FirstASCIIChar }; Char < LastASCIIChar; ++Char)
+	for (char Char{}; Char < LastASCIIChar; ++Char)
 	{
 		lwmf::IntPointStruct i0{};
 		lwmf::IntPointStruct i1{};
@@ -83,9 +82,8 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 
 	const std::size_t Size{ static_cast<std::size_t>(Width) * static_cast<std::size_t>(Height) };
 	std::vector<unsigned char> BakedFontGreyscale(Size);
-	constexpr std::int_fast32_t NumberOfASCIIChars{ LastASCIIChar - FirstASCIIChar };
-	std::vector<stbtt_bakedchar> CharData(NumberOfASCIIChars);
-	stbtt_BakeFontBitmap(FontBuffer, 0, static_cast<float>(FontSize), BakedFontGreyscale, Width, Height, FirstASCIIChar, NumberOfASCIIChars, CharData);
+	std::vector<stbtt_bakedchar> CharData(LastASCIIChar);
+	stbtt_BakeFontBitmap(FontBuffer, 0, static_cast<float>(FontSize), BakedFontGreyscale, Width, Height, 0, LastASCIIChar, CharData);
 
 	// Since the glyphs were rendered in greyscale, they need to be colored...
 	const lwmf::ColorStruct TempColor{ lwmf::INTtoRGBA(Color) };
@@ -96,13 +94,13 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 		FontColor[i] = lwmf::RGBAtoINT(TempColor.Red, TempColor.Green, TempColor.Blue, BakedFontGreyscale[i]);
 	}
 
-	Glyphs.resize(127);
+	Glyphs.resize(LastASCIIChar);
 
-	for (std::int_fast32_t Char{ FirstASCIIChar }; Char < LastASCIIChar; ++Char)
+	for (std::int_fast32_t Char{}; Char < LastASCIIChar; ++Char)
 	{
 		lwmf::FloatPointStruct QuadPos{};
 		stbtt_aligned_quad Quad{};
-		stbtt_GetBakedQuad(CharData, Width, Height, Char - FirstASCIIChar, QuadPos.X, QuadPos.Y, Quad, 1);
+		stbtt_GetBakedQuad(CharData, Width, Height, Char, QuadPos.X, QuadPos.Y, Quad, 1);
 
 		const lwmf::IntPointStruct Pos{ static_cast<std::int_fast32_t>(Quad.s0 * Width), static_cast<std::int_fast32_t>(Quad.t0 * Height) };
 		Glyphs[Char].Width = static_cast<std::int_fast32_t>(((Quad.s1 - Quad.s0) * Width) + 1.0F);
@@ -116,11 +114,14 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 		TempGlyphTexture.Width = Glyphs[Char].Width;
 		TempGlyphTexture.Height = Glyphs[Char].Height;
 
-		for (std::int_fast32_t TargetY{}, y{ Pos.Y }; y < Pos.Y + Glyphs[Char].Height; ++y, ++TargetY)
+		for (std::int_fast32_t DestY{}, SrcY{ Pos.Y }; SrcY < Pos.Y + Glyphs[Char].Height; ++SrcY, ++DestY)
 		{
-			for (std::int_fast32_t TargetX{}, x{ Pos.X }; x < Pos.X + Glyphs[Char].Width; ++x, ++TargetX)
+			const std::int_fast32_t TempDestY{ DestY * TempGlyphTexture.Width };
+			const std::int_fast32_t TempSrcY{ SrcY * Width };
+
+			for (std::int_fast32_t DestX{}, SrcX{ Pos.X }; SrcX < Pos.X + Glyphs[Char].Width; ++SrcX, ++DestX)
 			{
-				TempGlyphTexture.Pixels[TargetY * TempGlyphTexture.Width + TargetX] = FontColor[y * Width + x];
+				TempGlyphTexture.Pixels[TempDestY + DestX] = FontColor[TempSrcY + SrcX];
 			}
 		}
 
@@ -156,6 +157,12 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 	// Init raw devices
 	lwmf::RegisterRawInputDevice(lwmf::MainWindow, lwmf::DeviceIdentifier::HID_KEYBOARD);
 
+	// Inital clearance of window. Looks better while loading the rest of the game...
+	lwmf::ClearTexture(ScreenTexture, 0x00000000);
+	lwmf::ClearBuffer();
+	lwmf::SwapBuffer();
+
+	// Define some test strings
 	const std::string Text1{ "abcdefghijklmnopqrstuvwxyz" };
 	const std::string Text2{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
 	const std::string Text3{ "0123456789!?$&,.;:#+*=-_/()[]{}" };
@@ -208,6 +215,7 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 		TestFont4.RenderText(Text2, 10, 620);
 		TestFont4.RenderText(Text3, 10, 640);
 
+		Sleep(10);
 		lwmf::SwapBuffer();
 	}
 
