@@ -87,7 +87,7 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 	stbtt_BakeFontBitmap(FontBuffer, 0, static_cast<float>(FontSize), BakedFontGreyscale, Width, Height, 0, LastASCIIChar, CharData);
 
 	// Since the glyphs were rendered in greyscale, they need to be colored...
-	const lwmf::ColorStruct TempColor{ lwmf::INTtoRGBA(Color) };
+	const lwmf::ColorStructRGBA TempColor{ lwmf::INTtoRGBA(Color) };
 	std::vector<std::int_fast32_t> FontColor(Size);
 
 	for (std::size_t i{}; i < BakedFontGreyscale.size(); ++i)
