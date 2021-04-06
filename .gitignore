@@ -64,3 +64,5 @@ example/x64/Debug/vc142.pdb
 example/x64/Debug/lwmf_systemlog.log
 example/.vs/example/v16/ipch/AutoPCH/c7b575a55502e099/EXAMPLE.ipch
 example/x64/Release/example.exe.recipe
+example/.vs/example/v16/ipch/AutoPCH/48f65b0db2e681f3/EXAMPLE.ipch
+example/x64/Debug/example.exe.recipe
