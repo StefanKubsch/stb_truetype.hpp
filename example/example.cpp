@@ -16,6 +16,7 @@
 #include <fstream>
 #include <istream>
 #include <string>
+#include <string_view>
 
 // Include "lwmf.hpp"
 #define LWMF_LOGGINGENABLED
@@ -32,7 +33,7 @@ class GFX_TextClass final
 {
 public:
 	void InitFont(const std::string& FontName, std::int_fast32_t FontSize, std::int_fast32_t Color);
-	void RenderText(const std::string& Text, std::int_fast32_t x, std::int_fast32_t y);
+	void RenderText(const std::string_view& Text, std::int_fast32_t x, std::int_fast32_t y);
 
 private:
 	struct GlyphStruct final
@@ -130,7 +131,7 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 	}
 }
 
-inline void GFX_TextClass::RenderText(const std::string& Text, std::int_fast32_t x, const std::int_fast32_t y)
+inline void GFX_TextClass::RenderText(const std::string_view& Text, std::int_fast32_t x, const std::int_fast32_t y)
 {
 	for (const char& Char : Text)
 	{
@@ -164,9 +165,9 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 	lwmf::SwapBuffer();
 
 	// Define some test strings
-	const std::string Text1{ "abcdefghijklmnopqrstuvwxyz" };
-	const std::string Text2{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-	const std::string Text3{ "0123456789!?$&,.;:#+*=-_/()[]{}" };
+	const std::string_view Text1{ "abcdefghijklmnopqrstuvwxyz" };
+	const std::string_view Text2{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+	const std::string_view Text3{ "0123456789!?$&,.;:#+*=-_/()[]{}" };
 
 	// Init fonts
 	GFX_TextClass TestFont1{};
