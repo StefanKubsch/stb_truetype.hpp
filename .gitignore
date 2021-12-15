@@ -67,3 +67,8 @@ example/x64/Release/example.exe.recipe
 example/.vs/example/v16/ipch/AutoPCH/48f65b0db2e681f3/EXAMPLE.ipch
 example/x64/Debug/example.exe.recipe
 example/.clang-tidy
+example/.vs/example/project-colors.json
+example/.vs/example/v17/.suo
+example/.vs/example/v17/Browse.VC.db
+example/.vs/example/v17/ipch/AutoPCH/48f65b0db2e681f3/EXAMPLE.ipch
+example/.vs/example/v17/ipch/AutoPCH/c7b575a55502e099/EXAMPLE.ipch
