@@ -33,7 +33,7 @@ class GFX_TextClass final
 {
 public:
 	void InitFont(const std::string& FontName, std::int_fast32_t FontSize, std::int_fast32_t Color);
-	void RenderText(const std::string_view& Text, std::int_fast32_t x, std::int_fast32_t y);
+	void RenderText(const std::string_view Text, std::int_fast32_t x, std::int_fast32_t y);
 
 private:
 	struct GlyphStruct final
@@ -131,7 +131,7 @@ inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_
 	}
 }
 
-inline void GFX_TextClass::RenderText(const std::string_view& Text, std::int_fast32_t x, const std::int_fast32_t y)
+inline void GFX_TextClass::RenderText(const std::string_view Text, std::int_fast32_t x, const std::int_fast32_t y)
 {
 	for (const char& Char : Text)
 	{
