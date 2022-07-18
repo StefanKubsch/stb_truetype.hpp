@@ -33,7 +33,7 @@ class GFX_TextClass final
 {
 public:
 	void InitFont(const std::string& FontName, std::int_fast32_t FontSize, std::int_fast32_t Color);
-	void RenderText(const std::string_view Text, std::int_fast32_t x, std::int_fast32_t y);
+	void RenderText(std::string_view Text, std::int_fast32_t x, std::int_fast32_t y);
 
 private:
 	struct GlyphStruct final
@@ -165,9 +165,9 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 	lwmf::SwapBuffer();
 
 	// Define some test strings
-	const std::string_view Text1{ "abcdefghijklmnopqrstuvwxyz" };
-	const std::string_view Text2{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
-	const std::string_view Text3{ "0123456789!?$&,.;:#+*=-_/()[]{}" };
+	constexpr std::string_view Text1{ "abcdefghijklmnopqrstuvwxyz" };
+	constexpr std::string_view Text2{ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" };
+	constexpr std::string_view Text3{ "0123456789!?$&,.;:#+*=-_/()[]{}" };
 
 	// Init fonts
 	GFX_TextClass TestFont1{};
@@ -269,5 +269,5 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default: {}
 	}
 
-	return DefWindowProc(hWnd, message, wParam, lParam);
+	return DefWindowProcA(hWnd, message, wParam, lParam);
 }

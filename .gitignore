@@ -75,3 +75,4 @@ example/.vs/example/v17/ipch/AutoPCH/c7b575a55502e099/EXAMPLE.ipch
 example/.vs/example/FileContentIndex/085b0ccb-6a3d-438e-bbc7-99b5460b1b67.vsidx
 example/.vs/example/FileContentIndex/read.lock
 example/.vs/example/FileContentIndex/318397a8-07e8-41e0-ac06-4ac327b57017.vsidx
+*.vsidx
