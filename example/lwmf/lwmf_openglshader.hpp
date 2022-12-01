@@ -116,6 +116,7 @@ namespace lwmf
 	inline void ShaderClass::LoadShader(const std::string& ShaderName, const TextureStruct& Texture)
 	{
 		const std::string ShaderNameString{ "(Shadername " + ShaderName + ") - " };
+		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Start building shader...");
 
 		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Create vertex buffer object...");
 		glCreateBuffers(1, &VertexBufferObject);
@@ -123,28 +124,27 @@ namespace lwmf
 		glNamedBufferStorage(VertexBufferObject, Vertices.size() * sizeof(GLfloat), Vertices.data(), GL_DYNAMIC_STORAGE_BIT);
 		glCheckError();
 
-		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Create element buffer object...");
+		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Create indices buffer object...");
 
-		GLuint ElementBufferObject{};
+		GLuint IndicesBufferObject{};
 
-		constexpr std::array<GLint, 6> Elements
+		constexpr std::array<GLint, 6> Indices
 		{
 			0, 3, 2,
 			2, 1, 0
 		};
 
-		glCreateBuffers(1, &ElementBufferObject);
+		glCreateBuffers(1, &IndicesBufferObject);
 		glCheckError();
-		glNamedBufferStorage(ElementBufferObject, Elements.size() * sizeof(GLint), Elements.data(), GL_DYNAMIC_STORAGE_BIT);
+		glNamedBufferStorage(IndicesBufferObject, Indices.size() * sizeof(GLint), Indices.data(), GL_DYNAMIC_STORAGE_BIT);
 		glCheckError();
 
 		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Create and compile the vertex shader...");
 		const std::string VertexShaderString{ LoadShaderSource(ShaderName + "Vert") };
-		const GLchar* VertexShaderSource{ VertexShaderString.c_str() };
-		const GLint VertexShaderSourceLength{ static_cast<GLint>(VertexShaderString.size()) };
-		const GLuint VertexShader{ static_cast<GLuint>(glCreateShader(GL_VERTEX_SHADER)) };
+		const auto VertexShaderSource{ VertexShaderString.c_str() };
+		const auto VertexShader{ glCreateShader(GL_VERTEX_SHADER) };
 		glCheckError();
-		glShaderSource(VertexShader, 1, &VertexShaderSource, &VertexShaderSourceLength);
+		glShaderSource(VertexShader, 1, &VertexShaderSource, nullptr);
 		glCheckError();
 		glCompileShader(VertexShader);
 		glCheckError();
@@ -152,11 +152,10 @@ namespace lwmf
 
 		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Create and compile the fragment shader...");
 		const std::string FragmentShaderString{ LoadShaderSource(ShaderName + "Frag") };
-		const GLchar* FragmentShaderSource{ FragmentShaderString.c_str() };
-		const GLint FragmentShaderSourceLength{ static_cast<GLint>(FragmentShaderString.size()) };
-		const GLuint FragmentShader{ static_cast<GLuint>(glCreateShader(GL_FRAGMENT_SHADER)) };
+		const auto FragmentShaderSource{ FragmentShaderString.c_str() };
+		const auto FragmentShader{ glCreateShader(GL_FRAGMENT_SHADER) };
 		glCheckError();
-		glShaderSource(FragmentShader, 1, &FragmentShaderSource, &FragmentShaderSourceLength);
+		glShaderSource(FragmentShader, 1, &FragmentShaderSource, nullptr);
 		glCheckError();
 		glCompileShader(FragmentShader);
 		glCheckError();
@@ -199,21 +198,19 @@ namespace lwmf
 
 		glVertexArrayVertexBuffer(VertexArrayObject, 0, VertexBufferObject, 0, 4 * sizeof(GLfloat));
 		glCheckError();
-		glVertexArrayElementBuffer(VertexArrayObject, ElementBufferObject);
+		glVertexArrayElementBuffer(VertexArrayObject, IndicesBufferObject);
 		glCheckError();
 
 		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Create projection matrix...");
 		std::array<GLfloat, 16> ProjectionMatrix{};
 		Ortho2D(ProjectionMatrix, 0.0F, static_cast<GLfloat>(Texture.Width), static_cast<GLfloat>(Texture.Height), 0.0F);
-		glCheckError();
-		const auto Projection{ glGetUniformLocation(ShaderProgram, "MVP") };
-		glCheckError();
-		glProgramUniformMatrix4fv(ShaderProgram, Projection, 1, GL_FALSE, ProjectionMatrix.data());
+		glProgramUniformMatrix4fv(ShaderProgram, glGetUniformLocation(ShaderProgram, "MVP"), 1, GL_FALSE, ProjectionMatrix.data());
 		glCheckError();
 
 		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Get opacity uniform location...");
 		OpacityLocation = glGetUniformLocation(ShaderProgram, "Opacity");
 		glCheckError();
+		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Opacity uniform location:" + std::to_string(OpacityLocation));
 
 		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Since the shader program is now loaded into GPU, we can delete the shaders...");
 		glDetachShader(ShaderProgram, FragmentShader);
@@ -226,6 +223,7 @@ namespace lwmf
 		glCheckError();
 
 		// Set some flags
+		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Setting flags...");
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glCheckError();
 		glDisable(GL_DEPTH_TEST);
@@ -238,6 +236,8 @@ namespace lwmf
 		glCheckError();
 		glCullFace(GL_BACK);
 		glCheckError();
+
+		LWMFSystemLog.AddEntry(LogLevel::Info, __FILENAME__, __LINE__, ShaderNameString + "Finished building shader!");
 	}
 
 	inline void ShaderClass::LoadTextureInGPU(const lwmf::TextureStruct& Texture, GLuint *TextureID)

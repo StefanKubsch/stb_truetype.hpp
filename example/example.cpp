@@ -26,8 +26,8 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "./src/stb_truetype.hpp"
 
-// "ScreenTexture" is the main render target in our demo!
-inline lwmf::TextureStruct ScreenTexture{};
+// "Canvas" is the main render target in our demo!
+inline lwmf::TextureStruct Canvas{};
 
 class GFX_TextClass final
 {
@@ -53,7 +53,7 @@ private:
 
 inline void GFX_TextClass::InitFont(const std::string& FontName, const std::int_fast32_t FontSize, const std::int_fast32_t Color)
 {
-	GlyphShader.LoadShader("Default", ScreenTexture);
+	GlyphShader.LoadShader("Default", Canvas);
 
 	// Get raw (binary) font data
 	std::ifstream FontFile(FontName.c_str(), std::ifstream::binary);
@@ -149,7 +149,7 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 	lwmf::WindowInstance = hInstance;
 
 	// Create window and OpenGL context
-	lwmf::CreateOpenGLWindow(lwmf::WindowInstance, ScreenTexture, 1280, 720, "stb_truetype.hpp example - press ESC to exit!", false);
+	lwmf::CreateOpenGLWindow(lwmf::WindowInstance, Canvas, 1280, 720, "stb_truetype.hpp example - press ESC to exit!", false);
 	// Set VSync: 0 = off, -1 = on (adaptive vsync = smooth as fuck)
 	lwmf::SetVSync(0);
 	// Load OpenGL/wgl extensions
@@ -160,7 +160,7 @@ std::int_fast32_t WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInst
 	lwmf::RegisterRawInputDevice(lwmf::MainWindow, lwmf::DeviceIdentifier::HID_KEYBOARD);
 
 	// Inital clearance of window. Looks better while loading the rest of the game...
-	lwmf::ClearTexture(ScreenTexture, 0x00000000);
+	lwmf::ClearTexture(Canvas, 0x00000000);
 	lwmf::ClearBuffer();
 	lwmf::SwapBuffer();
 
