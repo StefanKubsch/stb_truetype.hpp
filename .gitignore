@@ -77,3 +77,5 @@ example/.vs/example/FileContentIndex/read.lock
 example/.vs/example/FileContentIndex/318397a8-07e8-41e0-ac06-4ac327b57017.vsidx
 *.vsidx
 example/x64/Release/example.tlog/link.write.2u.tlog
+example/x64/Debug/vc143.idb
+example/x64/Debug/vc143.pdb
