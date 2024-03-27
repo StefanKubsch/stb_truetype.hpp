@@ -112,11 +112,13 @@
 
 #pragma once
 
+#include <cfloat>
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
 #include <array>
+#include <memory>
 #include <vector>
 #include <algorithm>
 
@@ -1234,8 +1236,8 @@ inline static std::int_fast32_t stbtt__GetGlyphShapeTT(const stbtt_fontinfo& inf
 			}
 
 			// Find transformation scales.
-			const float m{ std::sqrtf(mtx[0] * mtx[0] + mtx[1] * mtx[1]) };
-			const float n{ std::sqrtf(mtx[2] * mtx[2] + mtx[3] * mtx[3]) };
+			const float m{ std::sqrt(mtx[0] * mtx[0] + mtx[1] * mtx[1]) };
+			const float n{ std::sqrt(mtx[2] * mtx[2] + mtx[3] * mtx[3]) };
 
 			// Get indexed glyph.
 			std::vector<stbtt_vertex> comp_verts{};
@@ -1918,10 +1920,10 @@ inline void stbtt_GetGlyphBitmapBoxSubpixel(const stbtt_fontinfo& font, const st
 	else
 	{
 		// move to integral bboxes (treating pixels as little squares, what pixels get touched)?
-		ix0 = static_cast<std::int_fast32_t>(std::floorf(x0 * scale_x + shift_x));
-		iy0 = static_cast<std::int_fast32_t>(std::floorf(-y1 * scale_y + shift_y));
-		ix1 = static_cast<std::int_fast32_t>(std::ceilf(x1 * scale_x + shift_x));
-		iy1 = static_cast<std::int_fast32_t>(std::ceilf(-y0 * scale_y + shift_y));
+		ix0 = static_cast<std::int_fast32_t>(std::floor(x0 * scale_x + shift_x));
+		iy0 = static_cast<std::int_fast32_t>(std::floor(-y1 * scale_y + shift_y));
+		ix1 = static_cast<std::int_fast32_t>(std::ceil(x1 * scale_x + shift_x));
+		iy1 = static_cast<std::int_fast32_t>(std::ceil(-y0 * scale_y + shift_y));
 	}
 }
 
@@ -2324,7 +2326,7 @@ inline static void stbtt__rasterize_sorted_edges(stbtt__bitmap& result, stbtt__e
 			for (std::int_fast32_t i{}; i < result.w; ++i)
 			{
 				sum += scanline2[i];
-				const std::int_fast32_t m{ std::clamp(static_cast<std::int_fast32_t>(std::round(std::abs(scanline[i] + sum) * 255.0F)), 0, 255) };
+				const std::int_fast32_t m{ std::clamp(static_cast<std::int32_t>(std::round(std::abs(scanline[i] + sum) * 255.0F)), 0, 255) };
 				result.pixels[j * result.stride + i] = static_cast<unsigned char>(m);
 			}
 		}
@@ -2573,8 +2575,8 @@ inline static void stbtt__tesselate_cubic(std::vector<stbtt__point>& points, std
 	const float dy2{ y3 - y2 };
 	const float dx{ x3 - x0 };
 	const float dy{ y3 - y0 };
-	const float longlen{ std::sqrtf(dx0 * dx0 + dy0 * dy0) + std::sqrtf(dx1 * dx1 + dy1 * dy1) + std::sqrtf(dx2 * dx2 + dy2 * dy2) };
-	const float shortlen{ std::sqrtf(dx * dx + dy * dy) };
+	const float longlen{ std::sqrt(dx0 * dx0 + dy0 * dy0) + std::sqrt(dx1 * dx1 + dy1 * dy1) + std::sqrt(dx2 * dx2 + dy2 * dy2) };
+	const float shortlen{ std::sqrt(dx * dx + dy * dy) };
 	const float flatness_squared{ longlen * longlen - shortlen * shortlen };
 
 	if (flatness_squared > objspace_flatness_squared)
